@@ -11,6 +11,7 @@ export default {
     // 与vue不同的是讲template部分写到render方法中
     render () {
         return (
+            // 使用这种方法可以直接在这里写js代码
             <div id="footer">
                 <span>Written by {this.author}</span>
             </div>
