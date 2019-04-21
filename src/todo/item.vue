@@ -3,9 +3,9 @@
 </template>
 
 <script>
-    export default {
-        name: "item.vue"
-    }
+export default {
+    name: "item.vue"
+}
 </script>
 
 <style scoped>
