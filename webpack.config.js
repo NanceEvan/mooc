@@ -43,13 +43,14 @@ const config = {
                     'style-loader',
                     'css-loader',
                     {
-                      loader: 'postcss-loader',
+                      loader: 'postcss-loader', // 能够编译生成sourceMap
                       options: {
                           sourceMap: true,  // 若stylus已经生成source-map，则postcss-loader就不再重新生成，提高编译效率
                       }
                     },
-                    'stylus-loader'  // 只用来处理stylus文件， 处理完成之后是css文件， css文件怎么处理对stylis-loader来说就无关紧要了， 直接扔给上一级css-loader上层透明
+                    // 只用来处理stylus文件， 处理完成之后是css文件， css文件怎么处理对stylis-loader来说就无关紧要了， 直接扔给上一级css-loader上层透明
                     // webpack的loader就是这么一层一层往上扔的，每一层loader只处理其关心的那部分工作
+                    'stylus-loader'  // 能够编译生成sourceMap
                 ]
 
             },

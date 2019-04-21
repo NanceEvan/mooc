@@ -1,10 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 
-import './assets/styles/test.css'
-import './assets/styles/test-stylus.styl'
-import './assets/images/bgblue.jpg'
-import './assets/images/done.svg'
+
 
 const root = document.createElement('div');
 document.body.appendChild(root);
