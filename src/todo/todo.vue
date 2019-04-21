@@ -9,8 +9,17 @@
             @keyup.enter="addTodo"
         >
 
-        <Item :todo="todo"></Item>
-        <Tabs :filter="filter"></Tabs>
+        <Item v-for="(todo, index) in filteredTodos"
+              :key="index"
+              :todo="todo"
+              @del="deleteTodo"
+        />
+        <Tabs
+            :filter="filter"
+            :todos="todos"
+            @toggle="toggleFilter"
+            @clearAllCompleted="clearAllCompleted"
+        />
     </section>
 
 </template>
@@ -18,15 +27,12 @@
 <script>
 import Item from './item.vue'
 import Tabs from './tabs.vue'
+let id = 0;
 export default {
-    name: "todo",
     data () {
       return {
-          todo: {
-              id: 0,
-              content: 'this is a test',
-              completed: false
-          },
+          // 如果没有使用vuex等状态管理工具， 数据一般都放在顶层的组件中， 比较方便对数据进行管理
+          todos: [],
           filter: 'all'
       }
     },
@@ -34,9 +40,34 @@ export default {
         Item,
         Tabs
     },
+    computed: {
+      filteredTodos () {
+          if (this.filter === 'all'){
+              return this.todos
+          }
+          const completed = this.filter === 'completed';
+          return this.todos.filter(todo => todo.completed === completed)
+      }
+    },
     methods: {
-        addTodo () {
-            console.log('enter key up')
+        addTodo (e) {
+            if (e.target.value !== ''){
+                this.todos.unshift({
+                    id: id ++,
+                    content: e.target.value.trim(),
+                    completed: false
+                });
+                e.target.value = ''
+            }
+        },
+        deleteTodo (id) {
+            this.todos.splice(this.todos.findIndex(todo => todo.id===id),1)
+        },
+        toggleFilter (state) {
+            this.filter = state
+        },
+        clearAllCompleted () {
+            this.todos = this.todos.filter(todo => todo.completed === false)
         }
     }
 }

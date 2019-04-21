@@ -19,6 +19,12 @@ export default {
     },
     methods:{
         deleteTodo(){
+            // 子组件通过事件通知父组件
+            // 父组件中会监听所有子组件中会触发的事件
+            // 父组件通过在子组件标签中使用@del来监听子组件的del通知， 实现了父子组件间事件的解耦
+
+            // 数据在哪生命的就在哪操作
+            // todos是在todo组件声明的， 所以对todos的修改操作也应该在todo组件组件中操作，子组件只负责通过emit通知父组件
             this.$emit('del',this.todo.id)
         }
     }

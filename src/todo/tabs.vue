@@ -1,6 +1,6 @@
 <template>
     <div class="helper">
-        <span class="left">2 items left</span>
+        <span class="left">{{unFinishedTodoLength}} items left</span>
         <span class="tabs">
             <span  v-for="(state, index) in states" :key="index" :class="[state, filter === state ? 'actived': '']"
                    @click="toggleFilter(state)"
@@ -18,6 +18,10 @@ export default {
         filter: {
           type: String,
           required: true
+        },
+        todos: {
+            type: Array,
+            required: true
         }
 
     },
@@ -26,9 +30,20 @@ export default {
             states: ['all', 'active', 'completed']
         }
     },
+    computed: {
+        unFinishedTodoLength () {
+            // 统计还没有完成的item项
+            // 当computed中的属性的依赖的值发生变化时， computed中的值会响应式的发生变化
+            return this.todos.filter(todo => !todo.completed).length
+        }
+    },
     methods: {
-        toggleFilter (state) {},
-        clearAllCompleted () {}
+        toggleFilter (state) {
+            this.$emit('toggle', state)
+        },
+        clearAllCompleted () {
+            this.$emit('clearAllCompleted')
+        }
     }
 }
 </script>
