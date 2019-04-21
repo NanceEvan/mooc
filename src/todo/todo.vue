@@ -7,13 +7,29 @@
             autofocus="autofocus"
             placeholder="接下去要做什么?"
             @keyup.enter="addTodo"
-        />
+        >
+
+        <Item :todo="todo"></Item>
     </section>
+
 </template>
 
 <script>
+import Item from './item.vue'
 export default {
     name: "todo",
+    data () {
+      return {
+          todo: {
+              id: 0,
+              content: 'this is a test',
+              completed: false
+          }
+      }
+    },
+    components: {
+        Item
+    },
     methods: {
         addTodo () {
             console.log('enter key up')
