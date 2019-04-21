@@ -10,12 +10,14 @@
         >
 
         <Item :todo="todo"></Item>
+        <Tabs :filter="filter"></Tabs>
     </section>
 
 </template>
 
 <script>
 import Item from './item.vue'
+import Tabs from './tabs.vue'
 export default {
     name: "todo",
     data () {
@@ -24,11 +26,13 @@ export default {
               id: 0,
               content: 'this is a test',
               completed: false
-          }
+          },
+          filter: 'all'
       }
     },
     components: {
-        Item
+        Item,
+        Tabs
     },
     methods: {
         addTodo () {
