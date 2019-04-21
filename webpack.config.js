@@ -6,6 +6,10 @@ const webpack = require('webpack');
 // 因为webpack编译任何文件都需要先基于配置文件先行配置
 const HTMLPlugin = require('html-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin'); // 引入插件
+// extract-text-webpack-plugin 主要是为了抽离css样式， 防止将样式打包在js中引起页面样式加载错误的乱象，
+// 通过js将css写入到页面中的方式效率不是很高， 并且不利于做浏览器缓存
+// 非js代码的东西单独打包成静态资源文件（可单独用于浏览器缓存，或通过js将样式写入浏览器，提高效率）
+const ExtractPlugin = require('extract-text-webpack-plugin');
 
 // 在package.json的script的build和dev两个脚本中设置的NODE_ENV都是存在process.env中的
 const isDev = process.env.NODE_ENV === 'development';
@@ -18,7 +22,7 @@ const config = {
     mode: 'development',
     entry: path.join(__dirname, 'src/index.js'),
     output: {
-      filename: 'bundle.js',
+      filename: 'bundle.[hash:8].js',
       path: path.join(__dirname, 'dist')
     },
     module: {
@@ -27,33 +31,33 @@ const config = {
                 test: /\.vue$/,
                 loader: 'vue-loader'
             },
-            {
-                test: /\.css$/,
-                use: [
-                    // style-loader: style-loader能够在需要载入的html中创建一个<style></style>标签，标签里的内容就是CSS内容
-                    'style-loader',
-                    // css-loader: css-loader是允许在js中import一个css文件，会将css文件当成一个模块引入到js文件中
-                    'css-loader'
-                ]
-            },
-            {
-                // css 预处理器
-                test: /\.styl/,
-                use: [
-                    'style-loader',
-                    'css-loader',
-                    {
-                      loader: 'postcss-loader', // 能够编译生成sourceMap
-                      options: {
-                          sourceMap: true,  // 若stylus已经生成source-map，则postcss-loader就不再重新生成，提高编译效率
-                      }
-                    },
-                    // 只用来处理stylus文件， 处理完成之后是css文件， css文件怎么处理对stylis-loader来说就无关紧要了， 直接扔给上一级css-loader上层透明
-                    // webpack的loader就是这么一层一层往上扔的，每一层loader只处理其关心的那部分工作
-                    'stylus-loader'  // 能够编译生成sourceMap
-                ]
-
-            },
+            // {
+            //     test: /\.css$/,
+            //     use: [
+            //         // style-loader: style-loader能够在需要载入的html中创建一个<style></style>标签，标签里的内容就是CSS内容
+            //         'style-loader',
+            //         // css-loader: css-loader是允许在js中import一个css文件，会将css文件当成一个模块引入到js文件中
+            //         'css-loader'
+            //     ]
+            // },
+            // {
+            //     // css 预处理器
+            //     test: /\.styl/,
+            //     use: [
+            //         'style-loader',
+            //         'css-loader',
+            //         {
+            //           loader: 'postcss-loader', // 能够编译生成sourceMap
+            //           options: {
+            //               sourceMap: true,  // 若stylus已经生成source-map，则postcss-loader就不再重新生成，提高编译效率
+            //           }
+            //         },
+            //         // 只用来处理stylus文件， 处理完成之后是css文件， css文件怎么处理对stylis-loader来说就无关紧要了， 直接扔给上一级css-loader上层透明
+            //         // webpack的loader就是这么一层一层往上扔的，每一层loader只处理其关心的那部分工作
+            //         'stylus-loader'  // 能够编译生成sourceMap
+            //     ]
+            //
+            // },
             {
                 test: /\.(gif|jpg|jpeg|png|svg)$/,
                 use: [
@@ -90,6 +94,24 @@ const config = {
 
 // cross-env 可以为不同的系统平台提供相同的编译命令
 if (isDev) {
+    config.module.rules.push({
+        // css 预处理器
+        test: /\.styl/,
+        use: [
+            'style-loader',
+            'css-loader',
+            {
+                loader: 'postcss-loader', // 能够编译生成sourceMap
+                options: {
+                    sourceMap: true,  // 若stylus已经生成source-map，则postcss-loader就不再重新生成，提高编译效率
+                }
+            },
+            // 只用来处理stylus文件， 处理完成之后是css文件， css文件怎么处理对stylis-loader来说就无关紧要了， 直接扔给上一级css-loader上层透明
+            // webpack的loader就是这么一层一层往上扔的，每一层loader只处理其关心的那部分工作
+            'stylus-loader'  // 能够编译生成sourceMap
+        ]
+
+    });
     config.devtool = '#cheap-module-eval-source-map';
     // 在dev环境下的webpack-dev-server的配置
     config.devServer = {
@@ -110,6 +132,31 @@ if (isDev) {
         new webpack.NoEmitOnErrorsPlugin()
     )
 
+} else {
+    config.module.rules.push({
+        // css 预处理器
+        test: /\.styl/,
+        use: ExtractPlugin.extract({
+            fallback: 'style-loader', // style-loader 是在css外包装了一层js代码, 但是在上线环境中需要进行浏览器缓存等操作， 不需要
+            use: [
+                'css-loader',
+                {
+                    loader: 'postcss-loader', // 能够编译生成sourceMap
+                    options: {
+                        sourceMap: true,  // 若stylus已经生成source-map，则postcss-loader就不再重新生成，提高编译效率
+                    }
+                },
+                // 只用来处理stylus文件， 处理完成之后是css文件， css文件怎么处理对stylis-loader来说就无关紧要了， 直接扔给上一级css-loader上层透明
+                // webpack的loader就是这么一层一层往上扔的，每一层loader只处理其关心的那部分工作
+                'stylus-loader'  // 能够编译生成sourceMap
+            ]
+        })
+
+    });
+    config.plugins.push(
+        new ExtractPlugin('styles.[chunkhash:8].css')
+    );
+    config.output.filename = '[name].[chunkhash:8].js' // 在dev-server中不能使用chunkhash， 否则会报错
 }
 
 module.exports = config;
