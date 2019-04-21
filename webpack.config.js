@@ -70,8 +70,7 @@ const config = {
             {
                 // jsx 文件加载
                 test: /\.jsx/,
-                use: [
-                ]
+                loader: 'babel-loader'
 
             },
         ]
