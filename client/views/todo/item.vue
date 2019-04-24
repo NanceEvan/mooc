@@ -66,9 +66,9 @@ export default {
     padding-left 5px
     cursor pointer
     &:after
-        content url('../assets/images/round.svg')
+        content url('../../assets/images/round.svg')
     &:checked:after
-        content url('../assets/images/done.svg')
+        content url('../../assets/images/done.svg')
 .destroy
     position absolute
     top 0

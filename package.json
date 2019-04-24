@@ -5,8 +5,12 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "cross-env NODE_ENV=production webpack --config webpack.config.js",
-    "dev": "cross-env NODE_ENV=development webpack-dev-server --config webpack.config.js"
+    "lint": "eslint --ext .js --ext .jsx --ext .vue client/",
+    "lint-fix": "eslint --fix --ext .js --ext .jsx --ext .vue client/",
+    "clean": "rimraf dist",
+    "build:client": "cross-env NODE_ENV=production webpack --config ./build/webpack.config.client.js",
+    "build": "npm run clean && npm run build:client",
+    "dev": "cross-env NODE_ENV=development webpack-dev-server --config ./build/webpack.config.client.js"
   },
   "author": "",
   "license": "ISC",
@@ -20,10 +24,18 @@
     "babel-preset-env": "^1.7.0",
     "cross-env": "^5.2.0",
     "css-loader": "^2.1.1",
-    "extract-text-webpack-plugin": "^4.0.0-beta.0",
+    "eslint": "^5.16.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-html": "^5.0.3",
+    "eslint-plugin-import": "^2.17.2",
+    "eslint-plugin-node": "^8.0.1",
+    "eslint-plugin-promise": "^4.1.1",
+    "eslint-plugin-standard": "^4.0.0",
     "file-loader": "^3.0.1",
     "html-webpack-plugin": "^3.2.0",
+    "mini-css-extract-plugin": "^0.6.0",
     "postcss-loader": "^3.0.0",
+    "rimraf": "^2.6.3",
     "style-loader": "^0.23.1",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2",
@@ -33,6 +45,7 @@
     "vue-template-compiler": "^2.6.10",
     "webpack": "^4.30.0",
     "webpack-cli": "^3.3.0",
-    "webpack-dev-server": "^3.3.1"
+    "webpack-dev-server": "^3.3.1",
+    "webpack-merge": "^4.2.1"
   }
 }

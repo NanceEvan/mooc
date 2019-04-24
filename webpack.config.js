@@ -20,7 +20,7 @@ const config = {
     // 默认情况下，target的值是web， 也就是为浏览器的环境提供编译
     target: "web",
     mode: 'development',
-    entry: path.join(__dirname, 'src/index.js'),
+    entry: path.join(__dirname, 'client/index.js'),
     output: {
       filename: 'bundle.[hash:8].js',
       path: path.join(__dirname, 'dist')
@@ -134,7 +134,7 @@ if (isDev) {
 
 } else {
     config.entry = {
-        entry: path.join(__dirname, 'src/index.js'),
+        entry: path.join(__dirname, 'client/index.js'),
         // 需要单独进行打包的框架
         // 第三方包和框架的稳定性是比较高的， 而业务代码是需要经常进行迭代的
         // 为了使浏览器尽可能长时间的缓存静态文件， 所以需要对这些第三方包或者框架进行单独打包
