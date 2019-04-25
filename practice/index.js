@@ -1,4 +1,5 @@
 // import './instance'
 // import './lifecycle'
 // import './databinding'
-import './computed'
+// import './computed'
+import './directive'
