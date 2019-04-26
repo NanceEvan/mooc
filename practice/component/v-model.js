@@ -2,17 +2,22 @@
 import Vue from 'vue'
 
 const component = {
+    model: {
+      prop: 'val',
+      event: 'change'
+    },
     props: {
-      value: String
+        value: String,
+        val: String
     },
     methods: {
         handleInput (e) {
-            this.$emit('input', e.target.value)
+            this.$emit('change', e.target.value)
         }
     },
     template: `
     <div>
-        <input type="text" @input="handleInput" :value="value">
+        <input type="text" @input="handleInput" :value="val">
     </div>
     `
 };
@@ -34,7 +39,8 @@ new Vue({
     },
     template: `
         <div>
-            <comp-one :value="value" @input="input"></comp-one>
+<!--            <comp-one :value="value" @input="input"></comp-one>-->
+            <comp-one v-model="value"></comp-one>
         </div>
     `
 });
