@@ -137,6 +137,7 @@ setInterval(() => {
 //
 // app.$emit('test', 'hi');
 
+
 // 强制组件重新渲染一次 $forceUpdate()
 // 不建议使用$forceUpdate()强制渲染， 因为耗费性能
 // app.$forceUpdate()
