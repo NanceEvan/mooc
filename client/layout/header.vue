@@ -1,6 +1,7 @@
 <template>
 <header class="main-header">
-    <h1>SizerTodo</h1>
+<!--    <h1>SizerTodo</h1>-->
+    <router-link tag="h1" to="/login">SizerTodo</router-link>
 </header>
 </template>
 

@@ -28,13 +28,18 @@ const devServer = {
     },
     // 注意，必须有 webpack.HotModuleReplacementPlugin 才能完全启用 HMR
     // 如果 webpack 或 webpack-dev-server 是通过 --hot 选项启动的，那么这个插件会被自动添加，所以你可能不需要把它添加到 webpack.config.js 中
-    hot: true
+    hot: true,
+    // history模式下的url会请求到服务器端，但是服务器端并没有这一个资源文件，就会返回404，所以需要配置这一项
+    historyApiFallback: {
+        index: '/index.html' //与output的publicPath有关(HTMLplugin生成的html默认为index.html)
+    },
 };
 
 let config;
 
 if (isDev) {
     config = merge(baseConfig, {
+        devtool: '#cheap-module-eval-source-map',
         mode: 'development',
         module: {
             rules: [
