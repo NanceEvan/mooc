@@ -9,7 +9,10 @@ const config = {
     entry: path.join(__dirname, '../client/index.js'),
     output: {
         filename: 'bundle.[hash:8].js',
-        path: path.join(__dirname, '../dist')
+        path: path.join(__dirname, '../dist'), // 所有输出文件的目标路径
+        // publicPath: "/public/", // 输出解析文件的目录， url 相对于 HTML页面
+        // path是webpack所有文件的输出路径， 必须是绝对路径 比如： output输出的js，js-loader解析的图片，HtmlWebpackPlugin生成的html文件， 都会存放在以path为基础的目录下
+        // publicPath并不会对生成的文件的路径造成影响， 主要是对页面里引入的资源的路径做对应的不全
     },
     module: {
         rules: [
